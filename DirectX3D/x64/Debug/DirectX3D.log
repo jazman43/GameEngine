@@ -1,0 +1,6 @@
+﻿  Main.cpp
+H:\GAME_ENGINE_DX\DirectX3D\Main.cpp(54,13): warning C4244: 'return': conversion from 'WPARAM' to 'int', possible loss of data
+H:\GAME_ENGINE_DX\DirectX3D\Main.cpp(25,14): warning C4930: 'BaseWindow base(void)': prototyped function not called (was a variable definition intended?)
+  MainWindow.cpp
+  Generating Code...
+  DirectX3D.vcxproj -> H:\GAME_ENGINE_DX\DirectX3D\x64\Debug\DirectX3D.exe
