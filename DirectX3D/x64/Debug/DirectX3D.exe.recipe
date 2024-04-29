@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>H:\GAME_ENGINE_DX\DirectX3D\x64\Debug\DirectX3D.exe</FullPath>
+      <FullPath>H:\GAME_ENGINE_DX\DirectX3D\GameEngine\DirectX3D\x64\Debug\DirectX3D.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

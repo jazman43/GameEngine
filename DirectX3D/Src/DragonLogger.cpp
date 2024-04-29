@@ -1,8 +1,10 @@
 #include "../Headers/DragonLogger.h"
-#include "../Headers/TerminalWindow.h"
 
 
-void Logger::Log(LogLevel level, const std::string& message)
+
+
+
+void Logger::LogMessage(const std::string& message)
 {
 	std::stringstream logStream;
 
@@ -16,54 +18,77 @@ void Logger::Log(LogLevel level, const std::string& message)
 
 	int r, g, b;
 
-	if(level == LogLevel::Message)
-	{
-		logStream << "[MESSSAGE]";
-		r = 255;
-		g = 255;
-		b = 255;
-	}
-	else if(level == LogLevel::Warning)
-	{
-		logStream << "[WARNING]";
-		r = 255;
-		g = 255;
-		b = 50;
-	}
-	else if (level == LogLevel::Error)
-	{
-		logStream << "[ERROR]";
-		r = 255;
-		g = 5;
-		b = 5;
-	}
-
-	/*switch (static_cast<int>(level))
-	{
-	case static_cast<int>(LogLevel::Message):
-		logStream << "[MESSSAGE]";
-		break;
-	case static_cast<int>(LogLevel::Warning):
-		logStream << "[WARNING]";
-		break;
-	case static_cast<int>(LogLevel::Error):
-		logStream << "[ERROR]";
-		break;
 	
-	}*/
-
-
+	logStream << "[MESSSAGE]";
+	r = 255;
+	g = 255;
+	b = 255;
 	logStream << " [ " << timeBuffer << " ] " << message << std::endl;
 
 	std::cout << logStream.str();
 
+	if (logFile.is_open()) logFile << logStream.str();
+
+	if (term != nullptr) { term->AddLogMessage(logStream.str(), r, g, b); }
 	
+	
+}
+
+void Logger::LogWarning(const std::string& message)
+{
+	std::stringstream logStream;
+
+
+	std::time_t currentTime = std::time(nullptr);
+	tm timeInfo;
+	localtime_s(&timeInfo, &currentTime);
+
+	char timeBuffer[20];
+	strftime(timeBuffer, sizeof(timeBuffer), "%Y-%m-%d %H:%M:%S", &timeInfo);
+
+	int r, g, b;
+	
+	logStream << "[WARNING]";
+	r = 255;
+	g = 255;
+	b = 50;
+	logStream << " [ " << timeBuffer << " ] " << message << std::endl;
+
+	std::cout << logStream.str();
 
 	if (logFile.is_open()) logFile << logStream.str();
 
+	if (term != nullptr) { term->AddLogMessage(logStream.str(), r, g, b); }
+	
+	
+}
 
-	if (term != nullptr) { term->AddLogMessage(logStream.str(),r,g,b); }
+void Logger::LogError( const std::string& message)
+{
+	std::stringstream logStream;
 
+
+	std::time_t currentTime = std::time(nullptr);
+	tm timeInfo;
+	localtime_s(&timeInfo, &currentTime);
+
+	char timeBuffer[20];
+	strftime(timeBuffer, sizeof(timeBuffer), "%Y-%m-%d %H:%M:%S", &timeInfo);
+
+	int r, g, b;
+	
+	logStream << "[ERROR]";
+	r = 255;
+	g = 5;
+	b = 5;
+	logStream << " [ " << timeBuffer << " ] " << message << std::endl;
+	
+	std::cout << logStream.str();
+	
+	if (logFile.is_open()) logFile << logStream.str();
+	
+	if (term != nullptr) { term->AddLogMessage(logStream.str(), r, g, b); }
+	
 }
 
 void Logger::SetLogFile(const std::string& filePath)
@@ -123,8 +148,8 @@ void TerminalWindow::Draw()
 	HFONT hOldFont = static_cast<HFONT>(SelectObject(hdc, hFont));
 
 
-	SetTextColor(hdc, RGB(_r, _g, _b));
-	SetBkColor(hdc, RGB(169, 169, 169));
+	//SetTextColor(hdc, RGB(_r, _g, _b));
+	SetBkColor(hdc, RGB(0, 0, 0));
 
 	// Clear the window
 	RECT rect;
@@ -133,6 +158,7 @@ void TerminalWindow::Draw()
 
 	// Draw log messages
 	for (size_t i = 0; i < logMessages.size(); ++i) {
+		SetTextColor(hdc, RGB(logColors[i].r, logColors[i].g, logColors[i].b));
 		TextOutA(hdc, 10, 10 + static_cast<int>(i) * 20, logMessages[i].c_str(), logMessages[i].size());
 	}
 
@@ -145,13 +171,13 @@ void TerminalWindow::Draw()
 void TerminalWindow::AddLogMessage(const std::string& message,int r, int g, int b)
 {
 	logMessages.push_back(message);
-	_r = r;
-	_g = g;
-	_b = b;
+	logColors.push_back({r,g,b});
+	
 
 	if (logMessages.size() > MAX_LOG_MESSAGES)
 	{
 		logMessages.erase(logMessages.begin());
+		logColors.erase(logColors.begin());
 	}
 
 

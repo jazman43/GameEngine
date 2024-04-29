@@ -9,6 +9,14 @@
 
 #define MAX_LOG_MESSAGES 50
 
+
+struct RGBColors
+{
+	int r;
+	int g;
+	int b;
+};
+
 class TerminalWindow : public BaseWindow
 {
 public:
@@ -26,6 +34,7 @@ public:
 private:
 
 	std::vector<std::string> logMessages;
+	std::vector<RGBColors> logColors;
 
 	int logLevel;
 
@@ -51,7 +60,9 @@ public:
 	}
 
 
-	void Log(LogLevel level, const std::string& message);
+	void LogMessage( const std::string& message);
+	void LogWarning( const std::string& message);
+	void LogError( const std::string& message);
 
 	void SetLogFile(const std::string& filePath);
 
@@ -75,13 +86,9 @@ private:
 
 //Macros
 
-#define ENGINE_LOG_MESSAGE(message) Logger::Instance().Log(LogLevel::Message, std::string("[Engine Message Log] ") + message)
-#define ENGINE_LOG_WARNING(message) Logger::Instance().Log(LogLevel::Warning, std::string("[Engine Warning Log] ") + message)
-#define ENGINE_LOG_ERROR(message) Logger::Instance().Log(LogLevel::Error, std::string("[Engine Error Log] ") + message)
-
-#define LOG_MESSAGE(message) Logger::Instance().Log(LogLevel::Message, std::string("[Message Log] ") + message)
-#define LOG_WARNING(message) Logger::Instance().Log(LogLevel::Warning, std::string("[Warning Log] ") + message)
-#define LOG_ERROR(message) Logger::Instance().Log(LogLevel::Error, std::string("[Error Log!] ") + message)
+#define LOG_MESSAGE(message) Logger::Instance().LogMessage(std::string("[message log] ")+ message)
+#define LOG_WARNING(message) Logger::Instance().LogWarning(std::string("[Warning Log] ") + message)
+#define LOG_ERROR(message) Logger::Instance().LogError( std::string("[Error Log!] ") + message)
 
 
 

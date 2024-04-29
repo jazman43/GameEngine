@@ -30,9 +30,12 @@ int CALLBACK WinMain(
 
 		Logger::Instance().SetTerminalWindow(&terminalWindow);
 
-		Logger::Instance().Log(Logger::LogLevel::Message, "hello");
-		Logger::Instance().Log(Logger::LogLevel::Error, "hello");
-		//Logger::Instance().Log(Logger::LogLevel::Warning, "hello");
+		LOG_MESSAGE("hello world");
+		LOG_WARNING("warning this is not functioning");
+		LOG_ERROR("Error in main.cpp line 35");
+		LOG_MESSAGE("moving left");
+
+		
 
 		MSG msg;
 		BOOL gResult;
